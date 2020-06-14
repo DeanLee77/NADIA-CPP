@@ -1,4 +1,4 @@
-# NADIA-Python Rule/Inference Engine
+# NADIA-CPP Rule/Inference Engine
 Open source project Nadia Rule/Policy Engine with C/C++.
 This project is based on original project [Nadia Rule/Inference Engine.](https://github.com/DeanLee77/Nadia).
 As this project is titled, this project is written in C/C++. 
