@@ -33,6 +33,9 @@
 		E167F8552451A2BC002D7542 /* fact_url_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E167F8532451A2BC002D7542 /* fact_url_value.cpp */; };
 		E167F8592451A4A0002D7542 /* fact_uuid_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E167F8572451A4A0002D7542 /* fact_uuid_value.cpp */; };
 		E167F85D2451A5EF002D7542 /* fact_list_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E167F85B2451A5EF002D7542 /* fact_list_value.cpp */; };
+		E17F2AE42497538D00E34AC3 /* script_engine_function.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E17F2AE22497538D00E34AC3 /* script_engine_function.cpp */; };
+		E17F2AE824978F1D00E34AC3 /* runtime_exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E17F2AE624978F1D00E34AC3 /* runtime_exception.cpp */; };
+		E17F2AEC2497919900E34AC3 /* return.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E17F2AEA2497919900E34AC3 /* return.cpp */; };
 		E18FB15B2488CC0F00D47335 /* statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E18FB1592488CC0F00D47335 /* statement.cpp */; };
 		E1A0823B244E6F9300CEE475 /* fact_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1A08239244E6F9300CEE475 /* fact_value.cpp */; };
 		E1A08242244E894400CEE475 /* fact_boolean_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1A08240244E894400CEE475 /* fact_boolean_value.cpp */; };
@@ -108,6 +111,12 @@
 		E167F8582451A4A0002D7542 /* fact_uuid_value.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fact_uuid_value.hpp; sourceTree = "<group>"; };
 		E167F85B2451A5EF002D7542 /* fact_list_value.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fact_list_value.cpp; sourceTree = "<group>"; };
 		E167F85C2451A5EF002D7542 /* fact_list_value.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fact_list_value.hpp; sourceTree = "<group>"; };
+		E17F2AE22497538D00E34AC3 /* script_engine_function.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = script_engine_function.cpp; sourceTree = "<group>"; };
+		E17F2AE32497538D00E34AC3 /* script_engine_function.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = script_engine_function.hpp; sourceTree = "<group>"; };
+		E17F2AE624978F1D00E34AC3 /* runtime_exception.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = runtime_exception.cpp; sourceTree = "<group>"; };
+		E17F2AE724978F1D00E34AC3 /* runtime_exception.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = runtime_exception.hpp; sourceTree = "<group>"; };
+		E17F2AEA2497919900E34AC3 /* return.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = return.cpp; sourceTree = "<group>"; };
+		E17F2AEB2497919900E34AC3 /* return.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = return.hpp; sourceTree = "<group>"; };
 		E18FB1592488CC0F00D47335 /* statement.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = statement.cpp; sourceTree = "<group>"; };
 		E18FB15A2488CC0F00D47335 /* statement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = statement.hpp; sourceTree = "<group>"; };
 		E1A08239244E6F9300CEE475 /* fact_value.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fact_value.cpp; sourceTree = "<group>"; };
@@ -207,11 +216,14 @@
 		BCA2A0DF24121CDC009BA6CA /* Script Interpreter */ = {
 			isa = PBXGroup;
 			children = (
+				E17F2AE92497918300E34AC3 /* Return */,
+				E17F2AE12497536200E34AC3 /* Script Engine Function */,
 				E1655D12249338EC00F8BCF9 /* Scipt Engine Callable */,
-				E12EED7D248FBF4E00564EB9 /* Interpreter */,
 				E164BEFA248E597400292222 /* Environment */,
+				E17F2AE524978EFF00E34AC3 /* Runtime Exception */,
 				E1DC359E2487CEB900EA647B /* Runtime Error */,
 				E1CD23E8247AAFD90095AF24 /* AST Printer */,
+				E12EED7D248FBF4E00564EB9 /* Interpreter */,
 				E1830B6024659FC3008FA003 /* Script Engine */,
 				E1124354243DF93E00A04E4D /* interpreter_token */,
 				E1124355243DF95500A04E4D /* interpreter_scanner */,
@@ -460,6 +472,33 @@
 			path = "Fact List Value";
 			sourceTree = "<group>";
 		};
+		E17F2AE12497536200E34AC3 /* Script Engine Function */ = {
+			isa = PBXGroup;
+			children = (
+				E17F2AE22497538D00E34AC3 /* script_engine_function.cpp */,
+				E17F2AE32497538D00E34AC3 /* script_engine_function.hpp */,
+			);
+			path = "Script Engine Function";
+			sourceTree = "<group>";
+		};
+		E17F2AE524978EFF00E34AC3 /* Runtime Exception */ = {
+			isa = PBXGroup;
+			children = (
+				E17F2AE624978F1D00E34AC3 /* runtime_exception.cpp */,
+				E17F2AE724978F1D00E34AC3 /* runtime_exception.hpp */,
+			);
+			path = "Runtime Exception";
+			sourceTree = "<group>";
+		};
+		E17F2AE92497918300E34AC3 /* Return */ = {
+			isa = PBXGroup;
+			children = (
+				E17F2AEA2497919900E34AC3 /* return.cpp */,
+				E17F2AEB2497919900E34AC3 /* return.hpp */,
+			);
+			path = Return;
+			sourceTree = "<group>";
+		};
 		E1830B6024659FC3008FA003 /* Script Engine */ = {
 			isa = PBXGroup;
 			children = (
@@ -589,6 +628,7 @@
 				E14D93D52461832F00C63588 /* string_handler_test.cpp in Sources */,
 				E1197EB8245021C300077139 /* fact_string_value.cpp in Sources */,
 				E1B56F272462319C0013500D /* tokens.cpp in Sources */,
+				E17F2AEC2497919900E34AC3 /* return.cpp in Sources */,
 				E1655D152493392600F8BCF9 /* script_engine_callable.cpp in Sources */,
 				E164BEFD248E59A900292222 /* environment.cpp in Sources */,
 				E14D93D0246182C000C63588 /* string_handler.cpp in Sources */,
@@ -599,8 +639,10 @@
 				E167F8552451A2BC002D7542 /* fact_url_value.cpp in Sources */,
 				E1A0823B244E6F9300CEE475 /* fact_value.cpp in Sources */,
 				BCA2A0E224121DCC009BA6CA /* interpreter_token.cpp in Sources */,
+				E17F2AE824978F1D00E34AC3 /* runtime_exception.cpp in Sources */,
 				E14D93DA246188F600C63588 /* tokenizer.cpp in Sources */,
 				E18FB15B2488CC0F00D47335 /* statement.cpp in Sources */,
+				E17F2AE42497538D00E34AC3 /* script_engine_function.cpp in Sources */,
 				BC81352A23F23B6D00A966DC /* date.cpp in Sources */,
 				E1DC35A12487CEEC00EA647B /* interpreter_runtime_error.cpp in Sources */,
 				BCA2A0EE241731E1009BA6CA /* parser.cpp in Sources */,

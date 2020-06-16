@@ -11,15 +11,15 @@
 
 void Interpreter_Test::expressionTest()
 {
-    Expr firstLiteral = Expr::Literal_Expr(123);
+    Expr* firstLiteral = new Expr::Literal_Expr(123);
     Interpreter_Token firstToken = Interpreter_Token(Token_Type::MINUS, "-", "", 1);
     
-    Expr binaryLeft = Expr::Unary_Expr(firstToken, firstLiteral);
+    Expr* binaryLeft = new Expr::Unary_Expr(firstToken, firstLiteral);
     
     Interpreter_Token secondToken = Interpreter_Token(Token_Type::STAR, "*", "", 1);
 
-    Expr secondLiteral = Expr::Literal_Expr(45.67);
-    Expr binaryRight = Expr::Grouping_Expr(secondLiteral);
+    Expr* secondLiteral = new Expr::Literal_Expr(45.67);
+    Expr* binaryRight = new Expr::Grouping_Expr(secondLiteral);
 //    Expr *expression = new Expr::Binary_Expr(binaryLeft, Interpreter_Token(Token_Type::STAR, "*", "", 1), binaryRight);
     
 
@@ -32,6 +32,6 @@ void Interpreter_Test::expressionTest()
 
 void Interpreter_Test::scriptEngineTest()
 {
-    string expression = "23+34*44/11";
+    string expression = "23+34*44/11;";
     Script_Engine::run(expression);
 }

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <any>
 
 using namespace std;
 
@@ -43,10 +44,10 @@ class Interpreter_Token
 public:
     Token_Type tokenType;
     string lexeme;
-    string literal;
+    any literal;
     int line;
     
-    Interpreter_Token(Token_Type tokenType, string lexeme, string literal, int line);
+    Interpreter_Token(Token_Type tokenType, string lexeme, any literal, int line);
     string toString();
 };
 

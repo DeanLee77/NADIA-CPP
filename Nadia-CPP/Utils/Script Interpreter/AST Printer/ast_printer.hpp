@@ -38,14 +38,14 @@ template<typename Ex>
 string AST_Printer::parenthesizeAux(Ex arg)
 {
     string returnValue;
-    return returnValue.append(" ").append(dynamic_cast<Expr&>(const_cast<Expr&>(arg)).accept(this));
+    return returnValue.append(" ").append(dynamic_cast<Expr*>(const_cast<Expr*>(arg))->accept(this));
 };
 
 template<typename Ex, typename ...Args>
 string AST_Printer::parenthesizeAux(Ex first, Args ...args)
 {
     string returnValue;
-    return returnValue.append(" ").append(dynamic_cast<Expr&>(first).accept(this)).append(parenthesizeAux(args...));
+    return returnValue.append(" ").append(dynamic_cast<Expr*>(const_cast<Expr*>(first))->accept(this)).append(parenthesizeAux(args...));
 };
 
 template<typename ...Ts>

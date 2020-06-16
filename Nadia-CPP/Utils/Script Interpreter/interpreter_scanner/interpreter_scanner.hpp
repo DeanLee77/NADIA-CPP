@@ -27,7 +27,7 @@ class Scanner
     void scanToken();
     char advance();
     void addToken(Token_Type& tokenType);
-    void addToken(Token_Type& tokenType, string& literal);
+    void addToken(Token_Type& tokenType, any& literal);
     bool match(char expected);
     char peek();
     void stringMark();

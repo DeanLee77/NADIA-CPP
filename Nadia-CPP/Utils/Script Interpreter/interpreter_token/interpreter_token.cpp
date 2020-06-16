@@ -7,8 +7,8 @@
 //
 
 #include "interpreter_token.hpp"
-
-Interpreter_Token::Interpreter_Token(Token_Type inputTokenType, string inputLexeme, string inputLiteral, int inputLine) : tokenType(inputTokenType), lexeme(inputLexeme), literal(inputLiteral), line(inputLine)
+#include "string_handler.hpp"
+Interpreter_Token::Interpreter_Token(Token_Type inputTokenType, string inputLexeme, any inputLiteral, int inputLine) : tokenType(inputTokenType), lexeme(inputLexeme), literal(inputLiteral), line(inputLine)
 {
     
 }
@@ -18,8 +18,17 @@ string Interpreter_Token::toString()
     "LESS", "LESS_EQUAL", "IDENTIFIER", "STRING", "NUMBER", "AND", "CLASS", "ELSE", "FALSE", "FUN", "FOR", "IF", "NIL", "OR", "PRINT", "RETURN", "SUPER", "THIS", "TRUE", "VAR", "WHILE", "EOF"};
     
     string tokenString;
+    string literalString = "";
+    if(tokenType == Token_Type::NUMBER)
+    {
+        literalString = to_string(any_cast<double>(literal));
+    }
+    else
+    {
+        literalString = any_cast<string>(literal);
+    }
     
-    tokenString.append(tokenTypeArray[tokenType]).append(" ").append(lexeme).append(" ").append(literal);
+    tokenString.append(tokenTypeArray[tokenType]).append(" ").append(lexeme).append(" ").append(literalString);
 
     return tokenString;
 }

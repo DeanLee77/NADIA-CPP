@@ -7,10 +7,11 @@
 //
 
 #include "environment.hpp"
+#include <iostream>
 
-Environment::Environment() : enclosing(new Environment())
+Environment::Environment()
 {
-    
+
 }
 
 Environment::Environment(Environment& enclosing): enclosing(&enclosing)
@@ -18,6 +19,10 @@ Environment::Environment(Environment& enclosing): enclosing(&enclosing)
     
 }
 
+Environment::Environment(Environment* enclosing): enclosing(enclosing)
+{
+    
+}
 any Environment::get(Interpreter_Token& name)
 {
     if(values.find(make_shared<string>(name.lexeme)) != values.end())

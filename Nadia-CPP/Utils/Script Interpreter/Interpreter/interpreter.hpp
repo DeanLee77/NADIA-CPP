@@ -22,18 +22,19 @@ class Script_Engine_Callable;
 
 class Interpreter: public Expr::Visitor<any>, public Stmt::Visitor<void>
 {
-    Environment environment;
-    any evaluate(Expr& expr);
-    void execute(Stmt& stmt);
+    any evaluate(Expr* expr);
+    void execute(Stmt* stmt);
     bool isTruthy(any& anyValue);
     bool isEqual(any& left, any& right);
     string stringify(any& anyObject);
     void checkNumberOperand(Interpreter_Token& operatorToken, any& right);
     void checkNumberOperand(Interpreter_Token& operatorToken, any& left, any& right);
 public:
+    Environment globals;
+    Environment environment = globals;
     Interpreter();
-    void executeBlock(vector<shared_ptr<Stmt>>& statements, Environment& environment);
-    void interpret(vector<shared_ptr<Stmt>>& expr);
+    void executeBlock(vector<shared_ptr<Stmt*>>& statements, Environment& environment);
+    void interpret(vector<shared_ptr<Stmt*>>& expr);
     any visitLiteralExpr(Expr::Literal_Expr* expr) override;
     any visitLogicalExpr(Expr::Logical_Expr* expr) override;
     any visitGroupingExpr(Expr::Grouping_Expr* expr) override;
@@ -43,8 +44,11 @@ public:
     any visitVariableExpr(Expr::Variable_Expr* expr) override;
     any visitAssignExpr(Expr::Assign_Expr* expr) override;
     void visitExpressionStmt(Stmt::Expression_Stmt* stmt) override;
+    void visitFunctionStmt(Stmt::Function_Stmt* stmt) override;
     void visitPrintStmt(Stmt::Print_Stmt* stmt) override;
+    void visitReturnStmt(Stmt::Return_Stmt* stmt) override;
     void visitVarStmt(Stmt::Var_Stmt* stmt) override;
+    void visitLetStmt(Stmt::Let_Stmt* stmt) override;
     void visitBlockStmt(Stmt::Block_Stmt* stmt) override;
     void visitIfStmt(Stmt::If_Stmt* stmt) override;
     void visitWhileStmt(Stmt::While_Stmt* stmt) override;

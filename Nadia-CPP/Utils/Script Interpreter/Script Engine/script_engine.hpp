@@ -18,15 +18,14 @@
 #include "interpreter_runtime_error.hpp"
 #include "interpreter.hpp"
 
-
 using namespace std;
 
-//inline bool hadError;
 class Parser;
+class Interpreter;
 
 class Script_Engine
 {
-//    static Interpreter interpreter;
+    inline static Interpreter *interpreter = new Interpreter();
     static void report(int line, string where, string message);
 public:
     inline static bool hadError = false;

@@ -164,11 +164,11 @@ char Scanner::advance()
 
 void Scanner::addToken(Token_Type& tokenType)
 {
-    string emptyString = "";
-    addToken(tokenType, emptyString);
+    any nullPointer = nullptr;
+    addToken(tokenType, nullPointer);
 }
 
-void Scanner::addToken(Token_Type& tokenType, string& literal)
+void Scanner::addToken(Token_Type& tokenType, any& literal)
 {
     string text = source.substr(start, current-start);
     interpreterTokens.push_back(make_shared<Interpreter_Token>(tokenType, text, literal, line));
@@ -215,7 +215,7 @@ void Scanner::stringMark()
     // The closing ".
     advance();
     // Trim the surrounding quotes.
-    string value = source.substr(start + 1, current - 1);
+    any value = source.substr(start + 1, current - 1);
     Token_Type tokenType = Token_Type::STRING;
     addToken(tokenType, value);
 }
@@ -242,7 +242,7 @@ void Scanner::number()
         }
     }
     Token_Type tokenType = Token_Type::NUMBER;
-    string subString = source.substr(start, current-start);
+    any subString = stod(source.substr(start, current-start));
     addToken(tokenType, subString);
 }
 

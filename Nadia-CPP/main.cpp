@@ -42,9 +42,9 @@ int main(int argc, const char * argv[]) {
     smatch match;
     bool matched = regex_match(text, match, re);
     cout << "matched : " << matched << endl;
-    Interpreter_Test::expressionTest();
+//    Interpreter_Test::expressionTest();
     Interpreter_Test::scriptEngineTest();
-    
+
     string test;
     cout << test << endl;
     return 0;

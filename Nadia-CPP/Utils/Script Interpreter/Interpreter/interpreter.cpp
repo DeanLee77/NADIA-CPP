@@ -9,16 +9,18 @@
 #include "interpreter.hpp"
 #include "script_engine.hpp"
 #include "script_engine_callable.hpp"
+#include "script_engine_function.hpp"
+#include "return.hpp"
 
 Interpreter::Interpreter()
 {
-
+    environment = globals;
 }
 
-void Interpreter::interpret(vector<shared_ptr<Stmt>>& statements)
+void Interpreter::interpret(vector<shared_ptr<Stmt*>>& statements)
 {
     try{
-        for(shared_ptr<Stmt> statement : statements)
+        for(shared_ptr<Stmt*> statement : statements)
         {
             execute(*statement.get());
         }
@@ -36,7 +38,7 @@ any Interpreter::visitLiteralExpr(Expr::Literal_Expr* expr)
 
 any Interpreter::visitLogicalExpr(Expr::Logical_Expr* expr)
 {
-    any left = evaluate(const_cast<Expr&>(expr->left));
+    any left = evaluate(const_cast<Expr*>(expr->left));
     
     if(expr->operatorToken.tokenType == Token_Type::OR)
     {
@@ -53,17 +55,17 @@ any Interpreter::visitLogicalExpr(Expr::Logical_Expr* expr)
         }
     }
     
-    return evaluate(const_cast<Expr&>(expr->right));
+    return evaluate(const_cast<Expr*>(expr->right));
 }
 
 any Interpreter::visitGroupingExpr(Expr::Grouping_Expr* expr)
 {
-    return evaluate(const_cast<Expr&>(expr->expression));
+    return evaluate(const_cast<Expr*>(expr->expression));
 }
 
 any Interpreter::visitUnaryExpr(Expr::Unary_Expr* expr)
 {
-    any right =  evaluate(const_cast<Expr&>(expr->right));
+    any right =  evaluate(const_cast<Expr*>(expr->right));
     switch(expr->operatorToken.tokenType)
     {
         case Token_Type::BANG:
@@ -83,8 +85,8 @@ any Interpreter::visitUnaryExpr(Expr::Unary_Expr* expr)
 
 any Interpreter::visitBinaryExpr(Expr::Binary_Expr* expr)
 {
-    any left = evaluate(const_cast<Expr&>(expr->left));
-    any right = evaluate(const_cast<Expr&>(expr->right));
+    any left = evaluate(const_cast<Expr*>(expr->left));
+    any right = evaluate(const_cast<Expr*>(expr->right));
     Interpreter_Token token = expr->operatorToken;
 
     switch(expr->operatorToken.tokenType)
@@ -381,17 +383,30 @@ any Interpreter::visitBinaryExpr(Expr::Binary_Expr* expr)
 
 any Interpreter::visitCallExpr(Expr::Call_Expr* expr)
 {
-    any callee = evaluate(const_cast<Expr&>(expr->callee));
+    any callee = evaluate(const_cast<Expr*>(expr->callee));
     
     vector<shared_ptr<any>> arguments;
     
     for(auto argument : expr->arguments)
     {
-        arguments.push_back(make_shared<any>(evaluate(*argument.get())));
+        arguments.push_back(make_shared<any>(evaluate(argument.get())));
+    }
+    
+    if(typeid(callee) != typeid(Script_Engine_Callable))
+    {
+        string message = "Can only call functions and classes.";
+        Interpreter_Token token = expr->paren;
+        throw Runtime_Error(token, message);
     }
     
     Script_Engine_Callable *function = any_cast<Script_Engine_Callable*>(callee);
     
+    if(arguments.size() != function->arity())
+    {
+        string message = "Expected "+String_Handler::toString(function->arity())+" arguments but got "+String_Handler::toString(arguments.size());
+        Interpreter_Token token = expr->paren;
+        throw Runtime_Error(token, message);
+    }
     return function->call(*this, arguments);
 }
 
@@ -402,7 +417,8 @@ any Interpreter::visitVariableExpr(Expr::Variable_Expr* var)
 
 any Interpreter::visitAssignExpr(Expr::Assign_Expr* expr)
 {
-    any value = evaluate(const_cast<Expr&>(expr->value));
+    
+    any value = evaluate(const_cast<Expr*>(expr->value));
     
     environment.assign(const_cast<Interpreter_Token&>(expr->name), value);
     
@@ -411,72 +427,103 @@ any Interpreter::visitAssignExpr(Expr::Assign_Expr* expr)
 
 void Interpreter::visitExpressionStmt(Stmt::Expression_Stmt* stmt)
 {
-    evaluate(const_cast<Expr&>(stmt->expression));
+    evaluate(const_cast<Expr*>(stmt->expression));
+}
+
+void Interpreter::visitFunctionStmt(Stmt::Function_Stmt* stmt)
+{
+    Script_Engine_Function *function = new Script_Engine_Function(*stmt, environment);
+    environment.define(const_cast<string&>(stmt->name.lexeme), *reinterpret_cast<any*>(function));
 }
 
 void Interpreter::visitPrintStmt(Stmt::Print_Stmt* stmt)
 {
-    any value = evaluate(const_cast<Expr&>(stmt->expression));
+    any value = evaluate(const_cast<Expr*>(stmt->expression));
     cout << stringify(value) << endl;
+}
+
+
+void Interpreter::visitReturnStmt(Stmt::Return_Stmt* stmt)
+{
+    any value;
+    optional<Expr> exprOp{*stmt->value};
+    if(exprOp.has_value())
+    {
+        value = evaluate(const_cast<Expr*>(stmt->value));
+    }
+    
+    throw Return(value);
 }
 
 void Interpreter::visitVarStmt(Stmt::Var_Stmt* stmt)
 {
     any value = nullptr;
     
-    if(make_optional<Expr>(stmt->initializer).has_value())
+    if(make_optional<Expr>(*stmt->initializer).has_value())
     {
-        value = evaluate(const_cast<Expr&>(stmt->initializer));
+        value = evaluate(const_cast<Expr*>(stmt->initializer));
+    }
+    environment.define(const_cast<string&>(stmt->name.lexeme), value);
+}
+
+void Interpreter::visitLetStmt(Stmt::Let_Stmt* stmt)
+{
+    any value = nullptr;
+    
+    if(make_optional<Expr>(*stmt->initializer).has_value())
+    {
+        value = evaluate(const_cast<Expr*>(stmt->initializer));
     }
     environment.define(const_cast<string&>(stmt->name.lexeme), value);
 }
 
 void Interpreter::visitBlockStmt(Stmt::Block_Stmt* stmt)
 {
-    executeBlock(const_cast<vector<shared_ptr<Stmt>>&>(stmt->statements), environment);
+    stmt->statements;
+    executeBlock(const_cast<vector<shared_ptr<Stmt*>>&>(stmt->statements), environment);
 }
 
 void Interpreter::visitIfStmt(Stmt::If_Stmt* stmt)
 {
-    any anyValue = evaluate(const_cast<Expr&>(stmt->condition));
+    any anyValue = evaluate(const_cast<Expr*>(stmt->condition));
     if(isTruthy(anyValue))
     {
-        execute(const_cast<Stmt&>(stmt->thenBranch));
+        execute(const_cast<Stmt*>(stmt->thenBranch));
     }
-    else if(make_optional<Stmt>(stmt->elseBranch).has_value())
+    else if(make_optional(const_cast<Stmt&>(*stmt->elseBranch)).has_value())
     {
-        execute(const_cast<Stmt&>(stmt->elseBranch));
+        execute(const_cast<Stmt*>(stmt->elseBranch));
     }
 }
 
 void Interpreter::visitWhileStmt(Stmt::While_Stmt* stmt)
 {
-    any anyValue = evaluate(const_cast<Expr&>(stmt->condition));
+    any anyValue = evaluate(const_cast<Expr*>(stmt->condition));
     while(isTruthy(anyValue))
     {
-        execute(const_cast<Stmt&>(stmt->body));
+        execute(const_cast<Stmt*>(stmt->body));
     }
 }
 
-any Interpreter::evaluate(Expr& expr)
+any Interpreter::evaluate(Expr* expr)
 {
-    return expr.accept(this);
+    return expr->accept(this);
 }
 
-void Interpreter::execute(Stmt& stmt)
+void Interpreter::execute(Stmt* stmt)
 {
-    stmt.accept(this);
+    stmt->accept(this);
 }
 
-void Interpreter::executeBlock(vector<shared_ptr<Stmt>>& statements, Environment& inEnvironment)
+void Interpreter::executeBlock(vector<shared_ptr<Stmt*>>& statements, Environment& inEnvironment)
 {
-    Environment previous = this->environment;
+    Environment previous = const_cast<Environment&>(this->environment);
     
     try{
         this->environment = inEnvironment;
         for(auto statement: statements)
         {
-            execute(*statement);
+            execute(*statement.get());
         }
     }
     catch(...){

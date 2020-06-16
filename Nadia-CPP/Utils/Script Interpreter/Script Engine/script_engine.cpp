@@ -10,9 +10,11 @@
 #include "interpreter_scanner.hpp"
 #include "parser.hpp"
 
-Script_Engine::Script_Engine() 
+//Interpreter* Script_Engine::interpreter = new Interpreter();
+
+Script_Engine::Script_Engine()
 {
-    
+
 }
 
 void* Script_Engine::evaluate(string script)
@@ -59,15 +61,16 @@ void Script_Engine::run(string source)
     vector<shared_ptr<Interpreter_Token>> tokens = scanner.scanTokens();
     Parser parser(tokens);
     
-    vector<shared_ptr<Stmt>> statements = parser.parse();
+    vector<shared_ptr<Stmt*>> statements = parser.parse();
     
     if(hadError)
     {
         return;
     }
 
-//    interpreter.interprete(statements);
-//    Script_Engine::Interpreter::interpret(statements);
+//    interpreter = new Interpreter();
+    interpreter->interpret(statements);
+
 //    cout << AST_Printer().print(expression) << endl;
 //    for(Interpreter_Token token: tokens)
 //    {

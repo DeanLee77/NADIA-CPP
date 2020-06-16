@@ -55,8 +55,8 @@ public:
 class Stmt::Block_Stmt : public Stmt
 {
 public:
-    Block_Stmt(vector<shared_ptr<Stmt>>& statements);
-    const vector<shared_ptr<Stmt>> statements;
+    Block_Stmt(vector<shared_ptr<Stmt*>>& statements);
+    const vector<shared_ptr<Stmt*>> statements;
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -72,8 +72,8 @@ T Stmt::Block_Stmt::accept(Stmt::Visitor<T>* visitor)
 class Stmt::Expression_Stmt : public Stmt
 {
 public:
-    const Expr expression;
-    Expression_Stmt(Expr& expression);
+    const Expr* expression;
+    Expression_Stmt(Expr* expression);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -90,9 +90,9 @@ class Stmt::Function_Stmt : public Stmt
 public:
     const Interpreter_Token name;
     const vector<shared_ptr<Interpreter_Token>> params;
-    const vector<shared_ptr<Stmt>> body;
+    const vector<shared_ptr<Stmt*>> body;
     
-    Function_Stmt(Interpreter_Token& name, vector<shared_ptr<Interpreter_Token>>& params, vector<shared_ptr<Stmt>>& body);
+    Function_Stmt(Interpreter_Token& name, vector<shared_ptr<Interpreter_Token>>& params, vector<shared_ptr<Stmt*>>& body);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -108,10 +108,10 @@ T Stmt::Function_Stmt::accept(Stmt::Visitor<T>* visitor)
 class Stmt::If_Stmt : public Stmt
 {
 public:
-    const Expr condition;
-    const Stmt thenBranch;
-    const Stmt elseBranch;
-    If_Stmt(Expr& condition, Stmt& thenBranch, Stmt& elseBranch);
+    const Expr* condition;
+    const Stmt* thenBranch;
+    const Stmt* elseBranch;
+    If_Stmt(Expr* condition, Stmt* thenBranch, Stmt* elseBranch);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -126,8 +126,8 @@ T Stmt::If_Stmt::accept(Stmt::Visitor<T>* visitor)
 class Stmt::Print_Stmt : public Stmt
 {
 public:
-    const Expr expression;
-    Print_Stmt(Expr& expression);
+    const Expr* expression;
+    Print_Stmt(Expr* expression);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -143,8 +143,8 @@ class Stmt::Return_Stmt : public Stmt
 {
 public:
     const Interpreter_Token keyword;
-    const Expr value;
-    Return_Stmt(Interpreter_Token& keyword, Expr& value);
+    const Expr* value;
+    Return_Stmt(Interpreter_Token& keyword, Expr* value);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -160,9 +160,9 @@ class Stmt::Let_Stmt : public Stmt
 {
 public:
     const Interpreter_Token name;
-    const Expr initializer;
+    const Expr* initializer;
     
-    Let_Stmt(Interpreter_Token& name, Expr& initializer);
+    Let_Stmt(Interpreter_Token& name, Expr* initializer);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -178,9 +178,9 @@ class Stmt::Var_Stmt : public Stmt
 {
 public:
     const Interpreter_Token name;
-    const Expr initializer;
+    const Expr* initializer;
     
-    Var_Stmt(Interpreter_Token& name, Expr& initializer);
+    Var_Stmt(Interpreter_Token& name, Expr* initializer);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
@@ -195,10 +195,10 @@ T Stmt::Var_Stmt::accept(Stmt::Visitor<T>* visitor)
 class Stmt::While_Stmt : public Stmt
 {
 public:
-    const Expr condition;
-    const Stmt body;
+    const Expr* condition;
+    const Stmt* body;
     
-    While_Stmt(Expr& condition, Stmt& body);
+    While_Stmt(Expr* condition, Stmt* body);
     
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);

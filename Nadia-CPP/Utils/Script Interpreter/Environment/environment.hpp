@@ -26,6 +26,7 @@ public:
     const Environment *enclosing;
     Environment();
     Environment(Environment& enclosing);
+    Environment(Environment* enclosing);
     any get(Interpreter_Token& name);
     void assign(Interpreter_Token& name, any& value);
     void define(string& name, any& value);
