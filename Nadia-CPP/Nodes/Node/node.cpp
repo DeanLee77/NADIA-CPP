@@ -7,10 +7,25 @@
 //
 
 #include "node.hpp"
+#include <regex>
+#include "date.hpp"
 
-int Node::staticNodeId = 0;
+inline smatch match;
+regex falseString("[fF][aA][lL][sS][eE]");
+regex trueString("[tT][rR][uU][eE]");
+regex intPattern("No");
+regex doublePattern("De");
+regex datePattern("Da");
+regex urlPattern("Url");
+regex hashPattern("Ha");
+regex uuidPattern("Id");
+regex defiStringPattern("(^[\'\"])(.*)([\'\"]$)");
 
-Node::Node(string parentText, Interpreter_Token tokens): tokens(tokens)
+template <typename T>
+int Node<T>::staticNodeId = 0;
+
+template <typename T>
+Node<T>::Node(string& parentText, shared_ptr<Tokens> tokens): tokens(tokens)
 {
     nodeId = staticNodeId;
     staticNodeId++;
@@ -18,135 +33,175 @@ Node::Node(string parentText, Interpreter_Token tokens): tokens(tokens)
     initialisation(parentText, tokens);
 }
 
-void Node::setNodeLine(int nodeLine)
+template <typename T>
+void Node<T>::setNodeLine(shared_ptr<int> inputNodeLine)
 {
-    this.nodeLine = nodeLine;
+    nodeLine = inputNodeLine;
 }
 
-int Node::getNodeLine()
+template <typename T>
+shared_ptr<int> Node<T>::getNodeLine()
 {
-    return this.nodeLine;
+    return nodeLine;
 }
 
-int Node::getStaticNodeId()
+template <typename T>
+int Node<T>::getStaticNodeId()
 {
     return staticNodeId;
 }
-int Node::getNodeId()
+
+template <typename T>
+int Node<T>::getNodeId()
 {
-    return this.nodeId;
+    return nodeId;
 }
 
-string Node::getNodeName()
+template <typename T>
+string& Node<T>::getNodeName()
 {
-    return this.nodeName;
+    return nodeName;
 }
 
-Interpreter_Token Node::getTokens()
+template <typename T>
+shared_ptr<Tokens> Node<T>::getTokens()
 {
-    return this.tokens;
+    return tokens;
 }
 
-string Node::getVariableName()
+template <typename T>
+shared_ptr<string> Node<T>::getVariableName()
 {
     return variableName;
 }
 
-void Node::setNodeVariable(string newVariableName)
+template <typename T>
+void Node<T>::setNodeVariable(shared_ptr<string> inputNewVariableName)
 {
-    this.variableName = newVariableName;
+    variableName = inputNewVariableName;
 }
 
-Fact_Value Node::getFactValue()
+template <typename T>
+shared_ptr<Fact_Value<T>> Node<T>::getFactValue()
 {
-    return this.value;
-}
-void Node::setValue(Fact_Value fv)
-{
-    this.value = fv;
+    return value;
 }
 
-void Node::setValue(string lastTokenString, string lastToken)
+template <typename T>
+void Node<T>::setValue(shared_ptr<Fact_Value<T>> fv)
 {
-    switch(lastTokenString)
+    value = fv;
+}
+
+template <typename T>
+void Node<T>::setValue(string& lastTokenString, string& lastToken)
+{
+    map<string, int> tokenMap = {{"No", 0},{"Do", 1},{"Da", 2},{"Url", 3},{"Id", 4},{"Ha", 5},{"Q", 6},{"L", 7},{"M", 8},{"U", 9},{"C", 10}};
+    int lastTokenIndex = tokenMap.find(lastTokenString)->second;
+    
+    switch(lastTokenIndex)
     {
-        case "No":
-            this.value = FactValue.parse(Integer.parseInt(lastToken));
+        case 0:
+        {
+            int intValue = stoi(lastToken);
+            value = Fact_Value<int>::parse(intValue);
             break;
-        case "Do":
-            this.value = FactValue.parse(Double.parseDouble(lastToken));
+        }
+        case 1:
+        {
+            double doubleValue = stod(lastToken);
+            value = Fact_Value<double>::parse(doubleValue);
             break;
-        case "Da":
-            this.value = FactValue.parse(LocalDate.parse(lastToken, DateTimeFormatter.ofPattern("d/M/yyyy")));
+        }
+        case 2:
+        {
+            Date dateValue(lastToken);
+            value = Fact_Value<Date>::parse(dateValue);
             break;
-        case "Url":
-            this.value = FactValue.parseURL(lastToken);
+        }
+        case 3:
+        {
+            value = Fact_Value<string>::parseURL(lastToken);
             break;
-        case "Id":
-            this.value = FactValue.parseUUID(lastToken);
+        }
+        case 4:
+        {
+            value = Fact_Value<string>::parseUUID(lastToken);
             break;
-        case "Ha":
-            this.value = FactValue.parseHash(lastToken);
+        }
+        case 5:
+        {
+            value = Fact_Value<string>::parseHash(lastToken);
             break;
-        case "Q":
-            this.value = FactValue.parseDefiString(lastToken);
+        }
+        case 6:
+        {
+            value = Fact_Value<string>::parseDefiString(lastToken);
             break;
-        case "L":
-        case "M":
-        case "U":
-        case "C":
-            if(this.isBoolean(lastToken))
+        }
+        case 7 ... 10:
+        {
+            if(isBoolean(lastToken))
             {
-                this.value = lastToken.equalsIgnoreCase("false")? FactValue.parse(false): FactValue.parse(true);
+                bool boolValue = regex_match(lastToken, match, falseString)? false : true;
+                value =  Fact_Value<bool>::parse(boolValue);
+                break;
             }
             else
             {
-                Pattern defiStringPattern = Pattern.compile("(^[\'\"])(.*)([\'\"]$)");
-                Matcher matcher = defiStringPattern.matcher(lastToken);
-                if(matcher.find())
+                if(regex_match(lastToken, match, defiStringPattern))
                 {
-                    String newS = matcher.group(2);
-                    this.value = FactValue.parseDefiString(newS);
+                    string defiString = match.str(2);
+                    value = Fact_Value<string>::parseDefiString(defiString);
                 }
                 else
                 {
-                    this.value = FactValue.parse(lastToken);
+                    value = Fact_Value<string>::parse(lastToken);
                 }
             }
             break;
+        }
     }
 }
-bool Node::isBoolean(string str)
+
+template <typename T>
+bool Node<T>::isBoolean(string& str)
 {
-    return str.matches("[FfAaLlSsEe]+")||str.matches("[TtRrUuEe]+")? true: false;
+    return regex_match(str, match, falseString) || regex_match(str, match, trueString)? true : false;
 }
 
-bool Node::isInteger(string str)
+template <typename T>
+bool Node<T>::isInteger(string& str)
 {
-    return str.equals("No")? true: false;
+    return regex_match(str, match, intPattern)? true: false;
 }
 
-bool Node::isDouble(string str)
+template <typename T>
+bool Node<T>::isDouble(string& str)
 {
-    return str.equals("De")?true: false;
+    return regex_match(str, match, doublePattern)? true: false;
 }
 
-bool Node::isDate(string str)
+template <typename T>
+bool Node<T>::isDate(string& str)
 {
-    return str.equals("Da")? true: false;
+    return regex_match(str, match, datePattern)? true: false;
 }
 
-bool Node::isURL(string str)
+template <typename T>
+bool Node<T>::isURL(string& str)
 {
-    return str.equals("Url")? true: false;
+    return regex_match(str, match, urlPattern)? true: false;
 }
 
-bool Node::isHash(string str)
+template <typename T>
+bool Node<T>::isHash(string& str)
 {
-    return str.equals("Ha")? true: false;
+    return regex_match(str, match, hashPattern)? true: false;
 }
 
-bool Node::isUUID(string str)
+template <typename T>
+bool Node<T>::isUUID(string& str)
 {
-    return str.equals("Id")? true: false;
+    return regex_match(str, match, uuidPattern)? true: false;
 }

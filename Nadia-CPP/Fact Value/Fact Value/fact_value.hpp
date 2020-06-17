@@ -17,10 +17,15 @@
 
 using namespace std;
 
-enum Fact_Value_Type
-{
-   DEFI_STRING, TEXT, STRING, INTEGER, DOUBLE, NUMBER, DATE, DECIMAL, BOOLEAN, LIST, RULE, RULE_SET, OBJECT, UNKNOWN, URL, HASH, UUID, NULL_VALUE
-};
+namespace FactValuType {
+    enum Fact_Value_Type
+    {
+       DEFI_STRING, TEXT, STRING, INTEGER, DOUBLE, NUMBER, DATE, DECIMAL, BOOLEAN, LIST, RULE, RULE_SET, OBJECT, UNKNOWN, URL, HASH, UUID, NULL_VALUE
+    };
+}
+
+using namespace FactValuType;
+
 template<typename T>
 class Fact_Boolean_Value;
 

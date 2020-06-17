@@ -197,12 +197,12 @@
 		BC50093723E92DD200831CD9 /* Nadia-CPP */ = {
 			isa = PBXGroup;
 			children = (
-				BC4E10C42499ECBE002F96D0 /* Nodes */,
-				E14D93D62461888E00C63588 /* Rule Parser */,
 				E167F83D24516381002D7542 /* Testings */,
 				BC81352B23F3DF2D00A966DC /* Utils */,
-				BC50093823E92DD200831CD9 /* main.cpp */,
+				BC4E10C42499ECBE002F96D0 /* Nodes */,
+				E14D93D62461888E00C63588 /* Rule Parser */,
 				BC50094D23E946CF00831CD9 /* Fact Value */,
+				BC50093823E92DD200831CD9 /* main.cpp */,
 			);
 			path = "Nadia-CPP";
 			sourceTree = "<group>";
