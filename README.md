@@ -26,9 +26,10 @@ This project is building a Rules(Policies)/Inference Engine with ease of use and
 * A user of the engine can carry out Foward-chaining and Backward-chaining with a given rule/policy set
 
 ## 2. Installation/Running Project in Local
+Note: current source code is developed in Mac XCode.
+
 In order to install the project in your workspace, you may need to do followings;
- 1. Install visual studio code or PyCharm CE;
- 2. Install PostgreSQL, and set your database name and password.;
+ 1. Install C++ compiler(current source code is targeted for GNU++17(C++) and GNU 11(C)).
  
  *Please note that there will be Demo video available soon.
 ## 3. Roadmap
@@ -96,4 +97,4 @@ An inference engine using forward chaining searches the inference rules until it
 
 ## 7. License
 Copyright (c) 2017-2020 individual contributors.
-Nadia-Python is open source project and released under AGPL 3.0 License.
+NADIA-CPP is open source project and released under AGPL 3.0 License.
