@@ -17,11 +17,13 @@
 using namespace std;
 
 class Interpreter;
+class Eval_Interpreter;
 
 class Script_Engine_Callable 
 {
 public:
     virtual int arity() = 0;
+    virtual any call(Eval_Interpreter& interpreter, vector<shared_ptr<any>>& arguments) = 0;
     virtual any call(Interpreter& interpreter, vector<shared_ptr<any>>& arguments) = 0;
     virtual string toString() = 0;
 };

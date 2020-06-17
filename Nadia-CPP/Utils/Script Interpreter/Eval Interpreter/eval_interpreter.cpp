@@ -1,23 +1,23 @@
 //
-//  interpreter.cpp
+//  eval_interpreter.cpp
 //  Nadia-CPP
 //
-//  Created by Dean Lee on 11/3/20.
+//  Created by Dean Lee on 17/6/20.
 //  Copyright © 2020 Dean Lee. All rights reserved.
 //
 
-#include "interpreter.hpp"
+#include "eval_interpreter.hpp"
 #include "script_engine.hpp"
 #include "script_engine_callable.hpp"
 #include "script_engine_function.hpp"
 #include "return.hpp"
 
-Interpreter::Interpreter()
+Eval_Interpreter::Eval_Interpreter()
 {
     environment = globals;
 }
 
-void Interpreter::interpret(vector<shared_ptr<Stmt*>>& statements)
+void Eval_Interpreter::interpret(vector<shared_ptr<Stmt*>>& statements)
 {
     try{
         for(shared_ptr<Stmt*> statement : statements)
@@ -31,12 +31,12 @@ void Interpreter::interpret(vector<shared_ptr<Stmt*>>& statements)
     }
 }
 
-any Interpreter::visitLiteralExpr(Expr::Literal_Expr* expr)
+any Eval_Interpreter::visitLiteralExpr(Expr::Literal_Expr* expr)
 {
     return expr->literal;
 }
 
-any Interpreter::visitLogicalExpr(Expr::Logical_Expr* expr)
+any Eval_Interpreter::visitLogicalExpr(Expr::Logical_Expr* expr)
 {
     any left = evaluate(const_cast<Expr*>(expr->left));
     
@@ -58,12 +58,12 @@ any Interpreter::visitLogicalExpr(Expr::Logical_Expr* expr)
     return evaluate(const_cast<Expr*>(expr->right));
 }
 
-any Interpreter::visitGroupingExpr(Expr::Grouping_Expr* expr)
+any Eval_Interpreter::visitGroupingExpr(Expr::Grouping_Expr* expr)
 {
     return evaluate(const_cast<Expr*>(expr->expression));
 }
 
-any Interpreter::visitUnaryExpr(Expr::Unary_Expr* expr)
+any Eval_Interpreter::visitUnaryExpr(Expr::Unary_Expr* expr)
 {
     any right =  evaluate(const_cast<Expr*>(expr->right));
     switch(expr->operatorToken.tokenType)
@@ -83,12 +83,12 @@ any Interpreter::visitUnaryExpr(Expr::Unary_Expr* expr)
     return nullptr;
 }
 
-any Interpreter::visitBinaryExpr(Expr::Binary_Expr* expr)
+any Eval_Interpreter::visitBinaryExpr(Expr::Binary_Expr* expr)
 {
     any left = evaluate(const_cast<Expr*>(expr->left));
     any right = evaluate(const_cast<Expr*>(expr->right));
     Interpreter_Token token = expr->operatorToken;
-
+    
     switch(expr->operatorToken.tokenType)
     {
         case Token_Type::GREATER:
@@ -381,7 +381,7 @@ any Interpreter::visitBinaryExpr(Expr::Binary_Expr* expr)
     return nullptr;
 }
 
-any Interpreter::visitCallExpr(Expr::Call_Expr* expr)
+any Eval_Interpreter::visitCallExpr(Expr::Call_Expr* expr)
 {
     any callee = evaluate(const_cast<Expr*>(expr->callee));
     
@@ -410,12 +410,12 @@ any Interpreter::visitCallExpr(Expr::Call_Expr* expr)
     return function->call(*this, arguments);
 }
 
-any Interpreter::visitVariableExpr(Expr::Variable_Expr* var)
+any Eval_Interpreter::visitVariableExpr(Expr::Variable_Expr* var)
 {
     return environment.get(const_cast<Interpreter_Token&>(var->name));
 }
 
-any Interpreter::visitAssignExpr(Expr::Assign_Expr* expr)
+any Eval_Interpreter::visitAssignExpr(Expr::Assign_Expr* expr)
 {
     
     any value = evaluate(const_cast<Expr*>(expr->value));
@@ -425,25 +425,29 @@ any Interpreter::visitAssignExpr(Expr::Assign_Expr* expr)
     return value;
 }
 
-void Interpreter::visitExpressionStmt(Stmt::Expression_Stmt* stmt)
+any Eval_Interpreter::visitExpressionStmt(Stmt::Expression_Stmt* stmt)
 {
-    evaluate(const_cast<Expr*>(stmt->expression));
+    return evaluate(const_cast<Expr*>(stmt->expression));
 }
 
-void Interpreter::visitFunctionStmt(Stmt::Function_Stmt* stmt)
+any Eval_Interpreter::visitFunctionStmt(Stmt::Function_Stmt* stmt)
 {
     Script_Engine_Function *function = new Script_Engine_Function(*stmt, environment);
     environment.define(const_cast<string&>(stmt->name.lexeme), *reinterpret_cast<any*>(function));
+    
+    return nullptr;
 }
 
-void Interpreter::visitPrintStmt(Stmt::Print_Stmt* stmt)
+any Eval_Interpreter::visitPrintStmt(Stmt::Print_Stmt* stmt)
 {
     any value = evaluate(const_cast<Expr*>(stmt->expression));
     cout << stringify(value) << endl;
+    
+    return nullptr;
 }
 
 
-void Interpreter::visitReturnStmt(Stmt::Return_Stmt* stmt)
+any Eval_Interpreter::visitReturnStmt(Stmt::Return_Stmt* stmt)
 {
     any value;
     optional<Expr> exprOp{*stmt->value};
@@ -455,7 +459,7 @@ void Interpreter::visitReturnStmt(Stmt::Return_Stmt* stmt)
     throw Return(value);
 }
 
-void Interpreter::visitVarStmt(Stmt::Var_Stmt* stmt)
+any Eval_Interpreter::visitVarStmt(Stmt::Var_Stmt* stmt)
 {
     any value = nullptr;
     
@@ -464,9 +468,11 @@ void Interpreter::visitVarStmt(Stmt::Var_Stmt* stmt)
         value = evaluate(const_cast<Expr*>(stmt->initializer));
     }
     environment.define(const_cast<string&>(stmt->name.lexeme), value);
+    
+    return value;
 }
 
-void Interpreter::visitLetStmt(Stmt::Let_Stmt* stmt)
+any Eval_Interpreter::visitLetStmt(Stmt::Let_Stmt* stmt)
 {
     any value = nullptr;
     
@@ -475,14 +481,18 @@ void Interpreter::visitLetStmt(Stmt::Let_Stmt* stmt)
         value = evaluate(const_cast<Expr*>(stmt->initializer));
     }
     environment.define(const_cast<string&>(stmt->name.lexeme), value);
+    
+    return nullptr;
 }
 
-void Interpreter::visitBlockStmt(Stmt::Block_Stmt* stmt)
+any Eval_Interpreter::visitBlockStmt(Stmt::Block_Stmt* stmt)
 {
     executeBlock(const_cast<vector<shared_ptr<Stmt*>>&>(stmt->statements), environment);
+    
+    return nullptr;
 }
 
-void Interpreter::visitIfStmt(Stmt::If_Stmt* stmt)
+any Eval_Interpreter::visitIfStmt(Stmt::If_Stmt* stmt)
 {
     any anyValue = evaluate(const_cast<Expr*>(stmt->condition));
     if(isTruthy(anyValue))
@@ -493,28 +503,32 @@ void Interpreter::visitIfStmt(Stmt::If_Stmt* stmt)
     {
         execute(const_cast<Stmt*>(stmt->elseBranch));
     }
+    
+    return nullptr;
 }
 
-void Interpreter::visitWhileStmt(Stmt::While_Stmt* stmt)
+any Eval_Interpreter::visitWhileStmt(Stmt::While_Stmt* stmt)
 {
     any anyValue = evaluate(const_cast<Expr*>(stmt->condition));
     while(isTruthy(anyValue))
     {
         execute(const_cast<Stmt*>(stmt->body));
     }
+    
+    return nullptr;
 }
 
-any Interpreter::evaluate(Expr* expr)
+any Eval_Interpreter::evaluate(Expr* expr)
 {
     return expr->accept(this);
 }
 
-void Interpreter::execute(Stmt* stmt)
+void Eval_Interpreter::execute(Stmt* stmt)
 {
     stmt->accept(this);
 }
 
-void Interpreter::executeBlock(vector<shared_ptr<Stmt*>>& statements, Environment& inEnvironment)
+void Eval_Interpreter::executeBlock(vector<shared_ptr<Stmt*>>& statements, Environment& inEnvironment)
 {
     Environment previous = const_cast<Environment&>(this->environment);
     
@@ -532,7 +546,7 @@ void Interpreter::executeBlock(vector<shared_ptr<Stmt*>>& statements, Environmen
     
 }
 
-bool Interpreter::isTruthy(any& anyValue)
+bool Eval_Interpreter::isTruthy(any& anyValue)
 {
     if(!anyValue.has_value())
     {
@@ -546,7 +560,7 @@ bool Interpreter::isTruthy(any& anyValue)
     return true;
 }
 
-bool Interpreter::isEqual(any& left, any& right)
+bool Eval_Interpreter::isEqual(any& left, any& right)
 {
     if(left.has_value() && right.has_value())
     {
@@ -577,7 +591,7 @@ bool Interpreter::isEqual(any& left, any& right)
         }
         else if(left.type() == typeid(long double))
         {
-           return any_cast<long double>(left) == any_cast<long double>(right);
+            return any_cast<long double>(left) == any_cast<long double>(right);
         }
         else if(leftType == typeid(float))
         {
@@ -603,7 +617,7 @@ bool Interpreter::isEqual(any& left, any& right)
     return false;
 }
 
-string Interpreter::stringify(any& anyObject)
+string Eval_Interpreter::stringify(any& anyObject)
 {
     if(! anyObject.has_value())
     {
@@ -667,7 +681,7 @@ string Interpreter::stringify(any& anyObject)
     return any_cast<string>(anyObject);;
 }
 
-void Interpreter::checkNumberOperand(Interpreter_Token& operatorToken, any& right)
+void Eval_Interpreter::checkNumberOperand(Interpreter_Token& operatorToken, any& right)
 {
     if(right.type() == typeid(double) || right.type() == typeid(long double) || right.type() == typeid(int) || right.type() == typeid(short int) || right.type() == typeid(long int) || right.type() == typeid(long long int) || right.type() == typeid(float))
     {
@@ -678,7 +692,7 @@ void Interpreter::checkNumberOperand(Interpreter_Token& operatorToken, any& righ
     throw Runtime_Error(operatorToken, message);
 }
 
-void Interpreter::checkNumberOperand(Interpreter_Token& operatorToken, any& left, any& right)
+void Eval_Interpreter::checkNumberOperand(Interpreter_Token& operatorToken, any& left, any& right)
 {
     if((left.type() == typeid(double) && right.type() == typeid(double)) ||
        (right.type() == typeid(long double) && left.type() == typeid(long double)) ||

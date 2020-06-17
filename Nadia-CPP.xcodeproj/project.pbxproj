@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BC2A6EB42418A643003A55B6 /* interpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC2A6EB22418A643003A55B6 /* interpreter.cpp */; };
+		BC4E10C32499ACB1002F96D0 /* eval_interpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC4E10C12499ACB1002F96D0 /* eval_interpreter.cpp */; };
+		BC4E10C82499ECFE002F96D0 /* node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC4E10C62499ECFE002F96D0 /* node.cpp */; };
 		BC50093923E92DD200831CD9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC50093823E92DD200831CD9 /* main.cpp */; };
 		BC50094823E9400000831CD9 /* Template_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC50094623E9400000831CD9 /* Template_test.cpp */; };
 		BC81352A23F23B6D00A966DC /* date.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC81352823F23B6D00A966DC /* date.cpp */; };
@@ -61,6 +63,10 @@
 /* Begin PBXFileReference section */
 		BC2A6EB22418A643003A55B6 /* interpreter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = interpreter.cpp; sourceTree = "<group>"; };
 		BC2A6EB32418A643003A55B6 /* interpreter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = interpreter.hpp; sourceTree = "<group>"; };
+		BC4E10C12499ACB1002F96D0 /* eval_interpreter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = eval_interpreter.cpp; sourceTree = "<group>"; };
+		BC4E10C22499ACB1002F96D0 /* eval_interpreter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = eval_interpreter.hpp; sourceTree = "<group>"; };
+		BC4E10C62499ECFE002F96D0 /* node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = node.cpp; sourceTree = "<group>"; };
+		BC4E10C72499ECFE002F96D0 /* node.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = node.hpp; sourceTree = "<group>"; };
 		BC50093523E92DD200831CD9 /* Nadia-CPP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Nadia-CPP"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC50093823E92DD200831CD9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BC50094623E9400000831CD9 /* Template_test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Template_test.cpp; sourceTree = "<group>"; };
@@ -146,6 +152,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC4E10C02499AC8D002F96D0 /* Eval Interpreter */ = {
+			isa = PBXGroup;
+			children = (
+				BC4E10C12499ACB1002F96D0 /* eval_interpreter.cpp */,
+				BC4E10C22499ACB1002F96D0 /* eval_interpreter.hpp */,
+			);
+			path = "Eval Interpreter";
+			sourceTree = "<group>";
+		};
+		BC4E10C42499ECBE002F96D0 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				BC4E10C52499ECD2002F96D0 /* Node */,
+			);
+			path = Nodes;
+			sourceTree = "<group>";
+		};
+		BC4E10C52499ECD2002F96D0 /* Node */ = {
+			isa = PBXGroup;
+			children = (
+				BC4E10C62499ECFE002F96D0 /* node.cpp */,
+				BC4E10C72499ECFE002F96D0 /* node.hpp */,
+			);
+			path = Node;
+			sourceTree = "<group>";
+		};
 		BC50092C23E92DD200831CD9 = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +197,7 @@
 		BC50093723E92DD200831CD9 /* Nadia-CPP */ = {
 			isa = PBXGroup;
 			children = (
+				BC4E10C42499ECBE002F96D0 /* Nodes */,
 				E14D93D62461888E00C63588 /* Rule Parser */,
 				E167F83D24516381002D7542 /* Testings */,
 				BC81352B23F3DF2D00A966DC /* Utils */,
@@ -223,6 +256,7 @@
 				E17F2AE524978EFF00E34AC3 /* Runtime Exception */,
 				E1DC359E2487CEB900EA647B /* Runtime Error */,
 				E1CD23E8247AAFD90095AF24 /* AST Printer */,
+				BC4E10C02499AC8D002F96D0 /* Eval Interpreter */,
 				E12EED7D248FBF4E00564EB9 /* Interpreter */,
 				E1830B6024659FC3008FA003 /* Script Engine */,
 				E1124354243DF93E00A04E4D /* interpreter_token */,
@@ -620,6 +654,7 @@
 			files = (
 				E167F85D2451A5EF002D7542 /* fact_list_value.cpp in Sources */,
 				BCA2A0D824121A40009BA6CA /* script_engine.cpp in Sources */,
+				BC4E10C82499ECFE002F96D0 /* node.cpp in Sources */,
 				BC50094823E9400000831CD9 /* Template_test.cpp in Sources */,
 				E167F8592451A4A0002D7542 /* fact_uuid_value.cpp in Sources */,
 				E111259F247E85C700D21DBF /* interpreter_test.cpp in Sources */,
@@ -640,6 +675,7 @@
 				E1A0823B244E6F9300CEE475 /* fact_value.cpp in Sources */,
 				BCA2A0E224121DCC009BA6CA /* interpreter_token.cpp in Sources */,
 				E17F2AE824978F1D00E34AC3 /* runtime_exception.cpp in Sources */,
+				BC4E10C32499ACB1002F96D0 /* eval_interpreter.cpp in Sources */,
 				E14D93DA246188F600C63588 /* tokenizer.cpp in Sources */,
 				E18FB15B2488CC0F00D47335 /* statement.cpp in Sources */,
 				E17F2AE42497538D00E34AC3 /* script_engine_function.cpp in Sources */,

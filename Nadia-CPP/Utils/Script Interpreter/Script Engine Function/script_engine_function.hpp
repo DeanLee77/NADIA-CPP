@@ -24,6 +24,7 @@ class Script_Engine_Function : public Script_Engine_Callable
 public:
     Script_Engine_Function(Stmt::Function_Stmt declaration, Environment closure);
     any call(Interpreter& interpreter, vector<shared_ptr<any>>& arguments) override;
+    any call(Eval_Interpreter& interpreter, vector<shared_ptr<any>>& arguments) override;
     int arity() override;
     string toString() override;
 

@@ -120,7 +120,7 @@ public:
 template<typename T>
 T Stmt::If_Stmt::accept(Stmt::Visitor<T>* visitor)
 {
-    visitor->visitIfStmt(this);
+    return visitor->visitIfStmt(this);
 }
 
 class Stmt::Print_Stmt : public Stmt
