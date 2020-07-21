@@ -19,55 +19,55 @@
 #include "fact_uuid_value.hpp"
 
 template<>
-Fact_List_Value<vector<var>>::Fact_List_Value()
+Fact_List_Value<vector<any>>::Fact_List_Value()
 {
     
 }
 
 template<>
-Fact_List_Value<vector<var>>::Fact_List_Value(shared_ptr<Fact_List_Value<vector<var>>> const & flistvPtr)
+Fact_List_Value<vector<any>>::Fact_List_Value(shared_ptr<Fact_List_Value<vector<any>>> const & flistvPtr)
 {
     this->listValue = flistvPtr->getValue();
 }
 
 template<>
-Fact_List_Value<vector<var>>::Fact_List_Value(vector<var> vectorValue) : listValue(make_shared<vector<var>>(vectorValue))
+Fact_List_Value<vector<any>>::Fact_List_Value(vector<any> vectorValue) : listValue(make_shared<vector<any>>(vectorValue))
 {
     
 }
 
 template<>
-void Fact_List_Value<vector<var>>::setValue(vector<var> vectorValue)
+void Fact_List_Value<vector<any>>::setValue(vector<any> vectorValue)
 {
-    listValue = make_shared<vector<var>>(vectorValue);
+    listValue = make_shared<vector<any>>(vectorValue);
 }
 
 template<>
-void Fact_List_Value<vector<var>>::setDefaultValue(shared_ptr<var> initialDefaultValue)
+void Fact_List_Value<vector<any>>::setDefaultValue(shared_ptr<any> initialDefaultValue)
 {
     defaultValue = initialDefaultValue;
 }
 
 template<>
-void Fact_List_Value<vector<var>>::addFactValueToListValue(var fv)
+void Fact_List_Value<vector<any>>::addFactValueToListValue(any fv)
 {
     listValue->push_back(fv);
 }
 
 template<>
-shared_ptr<Fact_Value_Type> Fact_List_Value<vector<var>>::getFactValueType()
+shared_ptr<Fact_Value_Type> Fact_List_Value<vector<any>>::getFactValueType()
 {
      return make_shared<Fact_Value_Type>(Fact_Value_Type::LIST);
 }
 
 template<typename T>
-shared_ptr<vector<var>>  Fact_List_Value<T>::getValue()
+shared_ptr<vector<any>>  Fact_List_Value<T>::getValue()
 {
     return listValue;
 }
 
 template<>
-shared_ptr<var> Fact_List_Value<vector<var>>::getDefaultValue()
+shared_ptr<any> Fact_List_Value<vector<any>>::getDefaultValue()
 {
     return defaultValue;
 }

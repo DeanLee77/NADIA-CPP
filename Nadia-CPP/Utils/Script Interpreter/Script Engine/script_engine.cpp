@@ -77,3 +77,22 @@ void Script_Engine::run(string source)
 //        cout << token.toString() << endl;
 //    }
 }
+
+any Script_Engine::evalStatement(string source)
+{
+    Scanner scanner = Scanner(source);
+    vector<shared_ptr<Interpreter_Token>> tokens = scanner.scanTokens();
+    Parser parser(tokens);
+    
+    Stmt::Expression_Stmt* statement = dynamic_cast<Stmt::Expression_Stmt*>(*parser.parse().at(0).get());
+    
+    
+    if(hadError)
+    {
+        return nullptr;
+    }
+    
+    //    interpreter = new Interpreter();
+    evalInterpreter = new Eval_Interpreter();
+    return evalInterpreter->visitExpressionStmt(statement);
+}

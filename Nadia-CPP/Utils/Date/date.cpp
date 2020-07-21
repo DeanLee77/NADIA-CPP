@@ -41,6 +41,8 @@ regex slashDelimiter("\\/");
 regex hyphenDelimiter("\\-");
 regex spaceDelimiter("\\s");
 
+
+
 Date::Date()
 {
     time_t now = time(0);
@@ -638,9 +640,109 @@ string Date::getWholeDateValueInString()
     return dateInString;
 }
 
+bool Date::isEqual(Date& anotherDate)
+{
+    return this->getWholeDateValueInString().compare(anotherDate.getWholeDateValueInString()) == 0;
+}
+
+bool Date::isAfter(Date& anotherDate)
+{
+    bool isAfter = false;
+    
+    if(this->getYearInInt() > anotherDate.getYearInInt())
+    {
+        return true;
+    }
+    else if(this->getYearInInt() < anotherDate.getYearInInt())
+    {
+        return false;
+    }
+    
+    if(this->getMonthInt() > anotherDate.getMonthInt())
+    {
+        return true;
+    }
+    else if(this->getMonthInt() < anotherDate.getMonthInt())
+    {
+        return false;
+    }
+    
+    if(this->getDateInInt() > anotherDate.getDateInInt())
+    {
+        return true;
+    }
+    else if(this->getDateInInt() < anotherDate.getDateInInt())
+    {
+        return false;
+    }
+    
+    return isAfter;
+}
+
+bool Date::isBefore(Date& anotherDate)
+{
+    bool isBefore = false;
+    
+    if(this->getYearInInt() < anotherDate.getYearInInt())
+    {
+        return true;
+    }
+    else if(this->getYearInInt() > anotherDate.getYearInInt())
+    {
+        return false;
+    }
+    
+    if(this->getMonthInt() < anotherDate.getMonthInt())
+    {
+        return true;
+    }
+    else if(this->getMonthInt() > anotherDate.getMonthInt())
+    {
+        return false;
+    }
+    
+    if(this->getDateInInt() < anotherDate.getDateInInt())
+    {
+        return true;
+    }
+    else if(this->getDateInInt() > anotherDate.getDateInInt())
+    {
+        return false;
+    }
+    
+    return isBefore;
+}
+
+int Date::daysDiffBetween(Date& date1, Date& date2)
+{
+    long int diff = difftime(mktime(date1.getDateInTm()), mktime(date2.getDateInTm()));
+    return (int)diff/86400;
+}
+
+int Date::monthsDiffBetween(Date& date1, Date& date2)
+{
+    long int diff = difftime(mktime(date1.getDateInTm()), mktime(date2.getDateInTm()));
+    return (int)diff/86400*12;
+}
+int Date::yearsDiffBetween(Date& date1, Date& date2)
+{
+    long int diff = difftime(mktime(date1.getDateInTm()), mktime(date2.getDateInTm()));
+    return (int)diff/86400*365.25;
+}
+
+tm* Date::getDateInTm()
+{
+    return date;
+}
+
 tm* Date::dateInit()
 {
     time_t rawtime;
     time(&rawtime);
     return localtime(&rawtime);
+}
+
+Date::~Date()
+{
+
 }

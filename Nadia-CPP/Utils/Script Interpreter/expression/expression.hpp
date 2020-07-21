@@ -61,7 +61,7 @@ public:
     const Interpreter_Token name;
     const Expr* value;
     Assign_Expr(Interpreter_Token& name, Expr* value);
-    
+    ~Assign_Expr();
     template<typename T>
     T accept(Expr::Visitor<T>* visitor);
     
@@ -74,7 +74,7 @@ public:
     const Interpreter_Token operatorToken;
     const Expr* right;
     Binary_Expr(Expr* inputLeft, Interpreter_Token& inputOperatorToken, Expr* inputRight);
-    
+    ~Binary_Expr();
     template<typename T>
     T accept(Expr::Visitor<T>* visitor);
 };
@@ -86,7 +86,7 @@ public:
     const Interpreter_Token paren;
     const vector<shared_ptr<Expr>> arguments;
     Call_Expr(Expr* callee, Interpreter_Token& paren, vector<shared_ptr<Expr>> arguments);
-    
+    ~Call_Expr();
     template<typename T>
     T accept(Expr::Visitor<T>* visitor);
 };
@@ -96,7 +96,7 @@ class Expr::Grouping_Expr : public Expr
 public:
     const Expr* expression;
     Grouping_Expr(Expr* inputExpression);
-        
+    ~Grouping_Expr();
     template<typename T>
     T accept(Expr::Visitor<T>* visitor);
 };
@@ -119,7 +119,7 @@ public:
     const Expr* right;
     
     Logical_Expr(Expr* left, Interpreter_Token& operatorToken, Expr* right);
-    
+    ~Logical_Expr();
     template<typename T>
     T accept(Expr::Visitor<T>* visitor);
 };
@@ -130,7 +130,7 @@ public:
     const Interpreter_Token operatorToken;
     const Expr* right;
     Unary_Expr(Interpreter_Token& inputOperatorToken, Expr* inputRight);
-        
+    ~Unary_Expr();
     template<typename T>
     T accept(Expr::Visitor<T>* visitor);
 };

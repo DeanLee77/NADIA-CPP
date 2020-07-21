@@ -40,8 +40,8 @@ class Tokenizer
     static map<string, int> tokenTypeMap;
 public:
     Tokenizer();
-    static shared_ptr<Tokens> getTokens(string text);
-    static shared_ptr<int> getTokenTypeIndex(string token);
+    static shared_ptr<Tokens> getTokens(string& text);
+    static shared_ptr<int> getTokenTypeIndex(string& token);
 };
 
 #endif /* tokenizer_hpp */

@@ -11,9 +11,14 @@
 
 #include <stdio.h>
 #include <string>
+#include <regex>
+#include <optional>
+#include <any>
+#include <unordered_map>
+
 #include "tokens.hpp"
-#include "fact_value.hpp"
-//#include "date.hpp"
+#include "string_handler.hpp"
+
 
 namespace LineType {
     enum Line_Type {
@@ -22,22 +27,26 @@ namespace LineType {
 }
 
 class Script_Engine;
+extern smatch match;
 
 using namespace std;
 using namespace LineType;
 
-template <typename T>
+class Metadata_Line;
+class Value_Conclusion_Line;
+class Comparison_Line;
+class Expr_Conclusion_Line;
+
 class Node
 {
 protected:
     static int staticNodeId;
     int nodeId;
     string nodeName;
-    shared_ptr<int> nodeLine;
-    shared_ptr<string> variableName;
-    shared_ptr<Fact_Value<T>> value;
-    shared_ptr<Tokens> tokens;
-    
+    int nodeLine;
+    string variableName;
+    any value;
+    shared_ptr<Tokens> tokens; 
     void setValue(string& lastTokenString, string& lastToken);
     bool isBoolean(string& str);
     bool isInteger(string& str);
@@ -52,19 +61,19 @@ public:
     virtual ~Node(){ };
     
     virtual void initialisation(string& parentText, shared_ptr<Tokens> tokens) = 0;
-    virtual Line_Type getLineType();
+    virtual Line_Type* getLineType() = 0;
+    virtual any selfEvaluate(unordered_map<string, any>& workingMemory) = 0;
     
-    Fact_Value<T> selfEvaluate(map<string, shared_ptr<Fact_Value<T>>> workingMemory, Script_Engine* scriptEngine);
-    void setNodeLine(shared_ptr<int> nodeLine);
-    shared_ptr<int> getNodeLine();
-    static int getStaticNodeId();
-    int getNodeId();
-    string& getNodeName();
+    void setNodeLine(int nodeLine);
+    int* getNodeLine();
+    static int* getStaticNodeId();
+    int* getNodeId();
+    string* getNodeName();
     shared_ptr<Tokens> getTokens();
-    shared_ptr<string> getVariableName();
-    void setNodeVariable(shared_ptr<string> newVariableName);
-    shared_ptr<Fact_Value<T>> getFactValue();
-    void setValue(shared_ptr<Fact_Value<T>> fv);
+    string* getVariableName();
+    void setNodeVariable(string& newVariableName);
+    any getFactValue();
+    void setValue(any fv);
     
 };
 #endif /* node_hpp */

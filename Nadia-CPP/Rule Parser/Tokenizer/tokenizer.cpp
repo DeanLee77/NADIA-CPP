@@ -7,6 +7,7 @@
 //
 
 #include "tokenizer.hpp"
+#include <cstring>
 
 Tokenizer::Tokenizer()
 {
@@ -37,13 +38,17 @@ regex Tokenizer::matchPatterns[] = { spaceRegex, quotedRegex, iterateRegex, mixe
 string Tokenizer::tokenType[] = { "S", "Q", "I", "M", "U", "Url", "O", "C", "No", "Ha", "De", "Da", "Id", "L" };
 map<string, int> Tokenizer::tokenTypeMap = {{"S", 0}, {"Q", 1}, {"I", 2}, {"M", 3}, {"U", 4}, {"Url", 5}, {"O", 6}, {"C", 7}, {"No", 8},  {"Ha", 9},{"De", 10}, {"Da", 11}, {"Id", 12}, {"L", 13}};
 
-shared_ptr<Tokens> Tokenizer::getTokens(string text)
+shared_ptr<Tokens> Tokenizer::getTokens(string& text)
 {
-    vector<string> tokenStringList = vector<string>();
-    vector<string> tokenList = vector<string>();
-    string tokenString;
+    vector<shared_ptr<string>> tokenStringList /* = vector<shared_ptr<string>>()*/;
+    vector<shared_ptr<string>> tokenList /*= vector<shared_ptr<string>>();*/;
+    string iniTokenString = "";
+    shared_ptr<string> tokenString = make_shared<string>(iniTokenString);
+    
     int textLength = (int)text.length();
+    
     int matchPatternsLength = sizeof(matchPatterns)/sizeof(matchPatterns[0]);
+    
     while (textLength != 0)
     {
         
@@ -61,9 +66,9 @@ shared_ptr<Tokens> Tokenizer::getTokens(string text)
                 // ignore space tokens
                 if (tokenType[i].compare("S") != 0)
                 {
-                    tokenStringList.push_back(tokenType[i]);
-                    tokenList.push_back(String_Handler::stringTrim(group));
-                    tokenString += tokenType[i];
+                    tokenStringList.push_back(make_shared<string>(tokenType[i]));
+                    tokenList.push_back(make_shared<string>(String_Handler::stringTrim(group)));
+                    *tokenString.get() += tokenType[i];
                 }
                 
                 string subStr =text.substr(group.length());
@@ -74,7 +79,7 @@ shared_ptr<Tokens> Tokenizer::getTokens(string text)
             if (i >= matchPatternsLength - 1)
             {
                 textLength = 0;
-                tokenString = "WARNING";
+                *tokenString.get() = "WARNING";
             }
         }
         
@@ -85,7 +90,7 @@ shared_ptr<Tokens> Tokenizer::getTokens(string text)
     
 }
 
-shared_ptr<int> Tokenizer::getTokenTypeIndex(string token)
+shared_ptr<int> Tokenizer::getTokenTypeIndex(string& token)
 {
     return make_shared<int>(Tokenizer::tokenTypeMap.find(token)->second);
 }

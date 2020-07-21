@@ -9,7 +9,7 @@
 #include <iostream>
 #include <variant>
 #include <regex>
-//#include "fact_value_test.hpp"
+#include "fact_value_test.hpp"
 //#include "string_handler_test.hpp"
 //#include "date_test.hpp"
 //#include "tokenizer_test.hpp"
@@ -17,6 +17,13 @@
 //#include "script_engine.hpp"
 //#include "interpreter_token_test.hpp"
 #include "interpreter_test.hpp"
+#include "fact_value.hpp"
+#include "fact_string_value.hpp"
+#include "metaline_test.hpp"
+#include "node.hpp"
+#include "metadata_line.hpp"
+#include "tokenizer.hpp"
+#include "tokens.hpp"
 
 using namespace std;
 
@@ -36,16 +43,18 @@ int main(int argc, const char * argv[]) {
 //    }
     
 //    Interpreter_Token_Test::tokenTypeTest();
-    cout << 4+5 << endl;
-    string text = "123.01";
-    regex re(".*\\.0$");
-    smatch match;
-    bool matched = regex_match(text, match, re);
-    cout << "matched : " << matched << endl;
 //    Interpreter_Test::expressionTest();
-    Interpreter_Test::scriptEngineTest();
+//    Interpreter_Test::scriptEngineTest();
 
-    string test;
-    cout << test << endl;
+//    string fsvValue = "fsvValue";
+    
+    Metaline_Testing::testing();
+//    
+//    shared_ptr<Fact_Value<string>> fv = make_shared<Fact_String_Value<string>>(Fact_String_Value<string>("fact string value"));
+//    string testText = "FIXED name list AS LIST";
+//    shared_ptr<Tokens> token = Tokenizer::getTokens(testText);
+//    shared_ptr<Node> node = make_shared<Metadata_Line>(testText, token);
+//    bool comparison = typeid(*node) == typeid(Metadata_Line);
+//    cout << comparison << endl;
     return 0;
 }

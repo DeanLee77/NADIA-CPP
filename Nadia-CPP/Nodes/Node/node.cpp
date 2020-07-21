@@ -7,96 +7,83 @@
 //
 
 #include "node.hpp"
-#include <regex>
+#include "fact_value.hpp"
 #include "date.hpp"
-
-inline smatch match;
+#include "metadata_line.hpp"
+#include "value_conclusion_line.hpp"
+#include "comparison_line.hpp"
+#include "expr_conclusion_line.hpp"
+#include <iostream>
 regex falseString("[fF][aA][lL][sS][eE]");
 regex trueString("[tT][rR][uU][eE]");
-regex intPattern("No");
-regex doublePattern("De");
-regex datePattern("Da");
-regex urlPattern("Url");
-regex hashPattern("Ha");
-regex uuidPattern("Id");
 regex defiStringPattern("(^[\'\"])(.*)([\'\"]$)");
 
-template <typename T>
-int Node<T>::staticNodeId = 0;
+int Node::staticNodeId = 0;
 
-template <typename T>
-Node<T>::Node(string& parentText, shared_ptr<Tokens> tokens): tokens(tokens)
+Node::Node(string& parentText, shared_ptr<Tokens> tokens): tokens(tokens), nodeId(staticNodeId)
 {
-    nodeId = staticNodeId;
     staticNodeId++;
-    
-    initialisation(parentText, tokens);
 }
 
-template <typename T>
-void Node<T>::setNodeLine(shared_ptr<int> inputNodeLine)
+void Node::setNodeLine(int inputNodeLine)
 {
     nodeLine = inputNodeLine;
 }
 
-template <typename T>
-shared_ptr<int> Node<T>::getNodeLine()
+int* Node::getNodeLine()
 {
-    return nodeLine;
+    return &nodeLine;
 }
 
-template <typename T>
-int Node<T>::getStaticNodeId()
+int* Node::getStaticNodeId()
 {
-    return staticNodeId;
+    return &staticNodeId;
 }
 
-template <typename T>
-int Node<T>::getNodeId()
+int* Node::getNodeId()
 {
-    return nodeId;
+    return &nodeId;
 }
 
-template <typename T>
-string& Node<T>::getNodeName()
+
+string* Node::getNodeName()
 {
-    return nodeName;
+    return &nodeName;
 }
 
-template <typename T>
-shared_ptr<Tokens> Node<T>::getTokens()
+
+shared_ptr<Tokens> Node::getTokens()
 {
     return tokens;
 }
 
-template <typename T>
-shared_ptr<string> Node<T>::getVariableName()
+
+string* Node::getVariableName()
 {
-    return variableName;
+    return &variableName;
 }
 
-template <typename T>
-void Node<T>::setNodeVariable(shared_ptr<string> inputNewVariableName)
+
+void Node::setNodeVariable(string& inputNewVariableName)
 {
     variableName = inputNewVariableName;
 }
 
-template <typename T>
-shared_ptr<Fact_Value<T>> Node<T>::getFactValue()
+any Node::getFactValue()
 {
     return value;
 }
 
-template <typename T>
-void Node<T>::setValue(shared_ptr<Fact_Value<T>> fv)
+
+void Node::setValue(any fv)
 {
     value = fv;
 }
 
-template <typename T>
-void Node<T>::setValue(string& lastTokenString, string& lastToken)
+
+void Node::setValue(string& lastTokenString, string& lastToken)
 {
-    map<string, int> tokenMap = {{"No", 0},{"Do", 1},{"Da", 2},{"Url", 3},{"Id", 4},{"Ha", 5},{"Q", 6},{"L", 7},{"M", 8},{"U", 9},{"C", 10}};
+    unordered_map<string, int> tokenMap = {{"No", 0},{"Do", 1},{"Da", 2},{"Url", 3},{"Id", 4},{"Ha", 5},{"Q", 6},{"L", 7},{"M", 8},{"U", 9},{"C", 10}};
     int lastTokenIndex = tokenMap.find(lastTokenString)->second;
     
     switch(lastTokenIndex)
@@ -164,44 +151,37 @@ void Node<T>::setValue(string& lastTokenString, string& lastToken)
     }
 }
 
-template <typename T>
-bool Node<T>::isBoolean(string& str)
+bool Node::isBoolean(string& str)
 {
     return regex_match(str, match, falseString) || regex_match(str, match, trueString)? true : false;
 }
 
-template <typename T>
-bool Node<T>::isInteger(string& str)
+bool Node::isInteger(string& str)
 {
-    return regex_match(str, match, intPattern)? true: false;
+    return str.compare("No") == 0? true:false;
 }
 
-template <typename T>
-bool Node<T>::isDouble(string& str)
+bool Node::isDouble(string& str)
 {
-    return regex_match(str, match, doublePattern)? true: false;
+    return str.compare("De") == 0? true:false;
 }
 
-template <typename T>
-bool Node<T>::isDate(string& str)
+bool Node::isDate(string& str)
 {
-    return regex_match(str, match, datePattern)? true: false;
+    return str.compare("Da") == 0? true:false;
 }
 
-template <typename T>
-bool Node<T>::isURL(string& str)
+bool Node::isURL(string& str)
 {
-    return regex_match(str, match, urlPattern)? true: false;
+    return str.compare("Url") == 0? true:false;
 }
 
-template <typename T>
-bool Node<T>::isHash(string& str)
+bool Node::isHash(string& str)
 {
-    return regex_match(str, match, hashPattern)? true: false;
+    return str.compare("Ha") == 0? true:false;
 }
 
-template <typename T>
-bool Node<T>::isUUID(string& str)
+bool Node::isUUID(string& str)
 {
-    return regex_match(str, match, uuidPattern)? true: false;
+    return str.compare("Id") == 0? true:false;
 }

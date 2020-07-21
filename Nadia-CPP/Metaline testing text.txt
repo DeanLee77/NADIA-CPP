@@ -1,0 +1,28 @@
+FIXED name list AS LIST
+	ITEM John Smith
+	ITEM Dean Tudir
+	ITEM Agness Huge
+	ITEM Sugar Sweet
+	ITEM Tim Armond
+	ITEM Lolly T.Sweet
+FIXED premium account type AS LIST
+	ITEM HAHAHOHO
+	ITEM HASHBRWON
+	ITEM GITHUB
+	ITEM ENGINE
+INPUT person's dob AS DATE
+INPUT the place the person normally locate the passport AS TEXT
+INPUT number of drinks the person consumes an hour AS NUMBER
+INPUT hours of drinks a day AS NUMBER
+INPUT enlistment date AS DATE
+INPUT discharge date AS DATE
+INPUT discharge type AS TEXT
+INPUT number of services AS NUMBER
+FIXED Special service AS LIST
+	ITEM Angular force
+	ITEM React force
+	ITEM JSP force
+	ITEM JSF force
+	ITEM Spring force
+	ITEM Bean force
+	ITEM Steam force

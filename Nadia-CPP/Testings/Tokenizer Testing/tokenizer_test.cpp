@@ -34,7 +34,7 @@ void Tokenizer_Test::tesing()
                 if(lineTracking == 0)
                 {
                     textstring = strLine;
-                    tokenString = Tokenizer::getTokens(strLine)->tokensString;
+                    tokenString = *Tokenizer::getTokens(strLine)->tokensString.get();
                     lineTracking++;
 
                 }

@@ -204,28 +204,30 @@ shared_ptr<Fact_UUID_Value<string>> Fact_Value_Test::generateFactUUIDValue()
 }
 
 
-shared_ptr<Fact_List_Value<vector<var>>> Fact_Value_Test::generateFactListValue()
+shared_ptr<Fact_List_Value<vector<any>>> Fact_Value_Test::generateFactListValue()
 {
-    var varFuv(generateFactURLValue());
+    any varFuv(generateFactURLValue());
 
-    var varFidv(generateFactUUIDValue());
+    any varFidv(generateFactUUIDValue());
     
-    var varFbv(generateFactBooleanValue());
+    any varFbv(generateFactBooleanValue());
 
-    var varFsv(generateFactStringValue());
+    any varFsv(generateFactStringValue());
 
-    var varFdv(generateFactDateValue());
+    any varFdv(generateFactDateValue());
 
-    var varFdsv(generateFactDefiStringValue());
+    shared_ptr<Fact_Defi_String_Value<string>> fdsv = generateFactDefiStringValue();
+    any varFdsv(fdsv);
+    shared_ptr<Fact_Defi_String_Value<string>> fdsv2 = any_cast<shared_ptr<Fact_Defi_String_Value<string>>>(varFdsv);
+    cout << "value: " <<*(fdsv2.get()->getValue().get()) << endl;
+    any varFdov(generateFactDoubleValue());
 
-    var varFdov(generateFactDoubleValue());
+    any varFhv(generateFactHashValue());
 
-    var varFhv(generateFactHashValue());
-
-    var varFiv(generateFactIntegerValue());
+    any varFiv(generateFactIntegerValue());
     
-    vector<var> vec = {varFdov, varFiv, varFhv, varFuv, varFidv, varFbv, varFsv, varFdv, varFdsv};
-    shared_ptr<Fact_List_Value<vector<var>>> flv = make_shared<Fact_List_Value<vector<var>>>(vec);
+    vector<any> vec = {varFdov, varFiv, varFhv, varFuv, varFidv, varFbv, varFsv, varFdv, varFdsv};
+    shared_ptr<Fact_List_Value<vector<any>>> flv = make_shared<Fact_List_Value<vector<any>>>(vec);
     
     return flv;
     
@@ -233,9 +235,9 @@ shared_ptr<Fact_List_Value<vector<var>>> Fact_Value_Test::generateFactListValue(
 
 void Fact_Value_Test::printFactListValue()
 {
-    Fact_List_Value<vector<var>> flv = *generateFactListValue();
+    Fact_List_Value<vector<any>> flv = *generateFactListValue();
     
-    vector<var> vectorValue = *flv.getValue();
+    vector<any> vectorValue = *flv.getValue();
     optional<Fact_Boolean_Value<bool>> fbv;
     optional<Fact_String_Value<string>> fsv;
     optional<Fact_Date_Value<Date>> fdv;
@@ -246,68 +248,71 @@ void Fact_Value_Test::printFactListValue()
     optional<Fact_URL_Value<string>> fuv;
     optional<Fact_UUID_Value<string>> fidv;
 
-    for(auto el : vectorValue)
+    for(any item : vectorValue)
     {
-        auto arg =  visit([&](var&& _in){ return move(_in);}, el);
-        switch(arg.index())
+        switch(typeIndexMap[item.type()])
         {
             case 0:
             {
-                fbv = get<0>(arg);
+                fbv = *(any_cast<shared_ptr<Fact_Boolean_Value<bool>>>(item).get());
                 cout << "Fact_Boolean_Value<bool> value: " << *fbv->getValue() << ", Fact Value Type: "<< *fbv->getFactValueType() << endl;
                 break;
+                
             }
             case 1:
             {
-                fsv = get<1>(arg);
+                fsv = *(any_cast<shared_ptr<Fact_String_Value<string>>>(item).get());
                 cout << "Fact_String_Value<string> value: " << *fsv->getValue() << ", Fact Value Type: " << *fsv->getFactValueType()<< endl;
                 break;
             }
             case 2:
             {
-                fdv = get<2>(arg);
+                fdv = *(any_cast<shared_ptr<Fact_Date_Value<Date>>>(item).get());
                 cout << "Fact_Date_Value<Date> value: " << fdv->getValue()->getWholeDateValueInString() << ", Fact Value Type: " << *fdv->getFactValueType()<< endl;
                 break;
             }
             case 3:
             {
-                fdsv = get<3>(arg);
-                cout << "Fact_Defi_String_Value<string> value: " << *fdsv->getValue() << ", Fact Value Type: " << *fdsv->getFactValueType()<< endl;
+                shared_ptr<Fact_Defi_String_Value<string>> fdsv2 = any_cast<shared_ptr<Fact_Defi_String_Value<string>>>(item);
+                cout << "Fact_Defi_String_Value<string> value: " << *(fdsv2->getValue()) << ", Fact Value Type: " << *fdsv2->getFactValueType()<< endl;
+                
+                
+                fdsv = *(any_cast<shared_ptr<Fact_Defi_String_Value<string>>>(item).get());
+                cout << "Fact_Defi_String_Value<string> value: " << *(fdsv->getValue()) << ", Fact Value Type: " << *fdsv->getFactValueType()<< endl;
                 break;
             }
             case 4:
             {
-                fdov = get<4>(arg);
+                fdov = *(any_cast<shared_ptr<Fact_Double_Value<double>>>(item));
                 cout << "Fact_Double_Value<double> value: " << *fdov->getValue() << ", Fact Value Type: " << *fdov->getFactValueType()<< endl;
                 break;
             }
             case 5:
             {
-                fhv = get<5>(arg);
+                fhv = *(any_cast<shared_ptr<Fact_Hash_Value<string>>>(item).get());
                 cout << "Fact_Hash_Value<string> value: " << *fhv->getValue() << ", Fact Value Type: " << *fhv->getFactValueType()<< endl;
                 break;
             }
             case 6:
             {
-                fiv = get<6>(arg);
+                fiv = *(any_cast<shared_ptr<Fact_Integer_Value<int>>>(item).get());
                 cout << "Fact_Integer_Value<int> value: " << *fiv->getValue() << ", Fact Value Type: " << *fiv->getFactValueType()<< endl;
                 break;
             }
             case 7:
             {
-                fuv = get<7>(arg);
+                fuv = *(any_cast<shared_ptr<Fact_URL_Value<string>>>(item).get());
                 cout << "Fact_URL_Value<string> value: " << *fuv->getValue() << ", Fact Value Type: " << *fuv->getFactValueType()<< endl;
                 break;
             }
             case 8:
             {
-                fidv = get<8>(arg);
+                fidv = *(any_cast<shared_ptr<Fact_UUID_Value<string>>>(item).get());
                 cout << "Fact_UUID_Value<string> value: " << *fidv->getValue() << ", Fact Value Type: " << *fidv->getFactValueType()<< endl;
                 break;
             }
         }
     }
-    
 }
 
 void Fact_Value_Test::testGenerateFactValue()

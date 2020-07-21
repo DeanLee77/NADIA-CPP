@@ -74,7 +74,7 @@ class Stmt::Expression_Stmt : public Stmt
 public:
     const Expr* expression;
     Expression_Stmt(Expr* expression);
-    
+    ~Expression_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };
@@ -112,7 +112,7 @@ public:
     const Stmt* thenBranch;
     const Stmt* elseBranch;
     If_Stmt(Expr* condition, Stmt* thenBranch, Stmt* elseBranch);
-    
+    ~If_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };
@@ -128,7 +128,7 @@ class Stmt::Print_Stmt : public Stmt
 public:
     const Expr* expression;
     Print_Stmt(Expr* expression);
-    
+    ~Print_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };
@@ -145,7 +145,7 @@ public:
     const Interpreter_Token keyword;
     const Expr* value;
     Return_Stmt(Interpreter_Token& keyword, Expr* value);
-    
+    ~Return_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };
@@ -163,7 +163,7 @@ public:
     const Expr* initializer;
     
     Let_Stmt(Interpreter_Token& name, Expr* initializer);
-    
+    ~Let_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };
@@ -181,7 +181,7 @@ public:
     const Expr* initializer;
     
     Var_Stmt(Interpreter_Token& name, Expr* initializer);
-    
+    ~Var_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };
@@ -199,7 +199,7 @@ public:
     const Stmt* body;
     
     While_Stmt(Expr* condition, Stmt* body);
-    
+    ~While_Stmt();
     template<typename T>
     T accept(Stmt::Visitor<T>* visitor);
 };

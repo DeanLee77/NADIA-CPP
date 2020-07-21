@@ -11,14 +11,16 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 using namespace std;
 class Tokens
 {
 public:
-    vector<string> tokensList;
-    vector<string> tokensStringList;
-    string tokensString;
-    Tokens(vector<string> tl, vector<string> tsl, string ts);
+    ~Tokens();
+    const vector<shared_ptr<string>> tokensList;
+    const vector<shared_ptr<string>> tokensStringList;
+    const shared_ptr<string> tokensString;
+    Tokens(vector<shared_ptr<string>> tl, vector<shared_ptr<string>> tsl, shared_ptr<string> ts);
 };
 #endif /* tokens_hpp */

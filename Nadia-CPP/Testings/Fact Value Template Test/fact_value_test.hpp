@@ -34,7 +34,7 @@ class Fact_Value_Test
     static shared_ptr<Fact_Integer_Value<int>> generateFactIntegerValue();
     static shared_ptr<Fact_URL_Value<string>> generateFactURLValue();
     static shared_ptr<Fact_UUID_Value<string>> generateFactUUIDValue();
-    static shared_ptr<Fact_List_Value<vector<var>>> generateFactListValue();
+    static shared_ptr<Fact_List_Value<vector<any>>> generateFactListValue();
     static void printFactListValue();
 //    static void testFindFactValueType();
 //    static shared_ptr<string> getFactValueTypeInString(Fact_Value_Type fvt);

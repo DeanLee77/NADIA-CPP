@@ -22,7 +22,7 @@ private:
     int year;  //represents year e.g. 2020
     int monthInt; //represents month from 1 to 12
     string monthString; //represents month from Jan to Dec
-    tm *date;
+    tm* date;
     tm* dateInit();
 public:
     Date();
@@ -30,6 +30,7 @@ public:
     Date(string dateInString);
     Date(int date, int month, int year);
     Date(string date, string month, string year);
+    ~Date();
     
     int getDateInInt();
     string getDateInString();
@@ -45,5 +46,15 @@ public:
     
     string getWholeDateValueInFormattedString(string formatInString);
     string getWholeDateValueInString();
+    bool isEqual(Date& anotherDate);
+    bool isAfter(Date& anotherDate);
+    bool isBefore(Date& anotherDate);
+    
+    static int daysDiffBetween(Date& date1, Date& date2);
+    static int monthsDiffBetween(Date& date1, Date& date2);
+    static int yearsDiffBetween(Date& date1, Date& date2);
+    
+    tm* getDateInTm();
+    
 };
 #endif /* date_hpp */

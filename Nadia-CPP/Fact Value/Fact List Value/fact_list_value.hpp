@@ -17,18 +17,18 @@ template<typename T>
 class Fact_List_Value : public Fact_Value<T>
 {
 private:
-    shared_ptr<vector<var>> listValue;
-    shared_ptr<var> defaultValue;
+    shared_ptr<vector<any>> listValue;
+    shared_ptr<any> defaultValue;
 public:
     Fact_List_Value();
-    Fact_List_Value(shared_ptr<Fact_List_Value<vector<var>>> const & flistvPtr);
-    Fact_List_Value(vector<var> vectorValue);
-    void setDefaultValue(shared_ptr<var> defaultValue);
-    void addFactValueToListValue(var addingValue);
-    void setValue(vector<var> vectorValue) override;
+    Fact_List_Value(shared_ptr<Fact_List_Value<vector<any>>> const & flistvPtr);
+    Fact_List_Value(vector<any> vectorValue);
+    void setDefaultValue(shared_ptr<any> defaultValue);
+    void addFactValueToListValue(any addingValue);
+    void setValue(vector<any> vectorValue) override;
     shared_ptr<Fact_Value_Type> getFactValueType() override;
-    shared_ptr<vector<var>> getValue() override;
-    shared_ptr<var> getDefaultValue();
+    shared_ptr<vector<any>> getValue() override;
+    shared_ptr<any> getDefaultValue();
 
 };
 

@@ -10,8 +10,9 @@
 
 string String_Handler::stringTrim(string& str)
 {
-    str.erase(0, str.find_first_not_of(' '));
-    str.erase(str.find_last_not_of(' ')+1);
+    string whitespace = " \n\r\t\f\v";
+    str.erase(0, str.find_first_not_of(whitespace));
+    str.erase(str.find_last_not_of(whitespace)+1);
     return str;
 }
 
