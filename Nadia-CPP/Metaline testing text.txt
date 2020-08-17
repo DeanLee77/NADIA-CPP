@@ -26,3 +26,7 @@ FIXED Special service AS LIST
 	ITEM Spring force
 	ITEM Bean force
 	ITEM Steam force
+FIXED service start date IS 1/1/1988
+FIXED a name of the first person IS "John Smith"
+FIXED the first integer IS 34
+FIXED the first double IS 34.123

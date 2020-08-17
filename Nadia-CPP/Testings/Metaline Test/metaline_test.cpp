@@ -89,13 +89,13 @@ bool Metaline_Testing::testing()
     {
         cout << "node name: " << it->first << endl;
         any factValue = it->second.get()->getFactValue();
-        const type_info &factValueType = typeid(factValue);
+        const type_info &factValueType = factValue.type();
         if(factValueType == typeid(shared_ptr<Fact_List_Value<vector<any>>>))
         {
             shared_ptr<vector<any>> list = any_cast<shared_ptr<Fact_List_Value<vector<any>>>>(factValue).get()->getValue();
             for(auto item : *list)
             {
-                const type_info& itemType = typeid(item);
+                const type_info& itemType = item.type();
                 
                 if(itemType == typeid(shared_ptr<Fact_Boolean_Value<bool>>))
                 {
@@ -133,7 +133,6 @@ bool Metaline_Testing::testing()
                 {
                     cout << "Fact Value in a list: " << *(any_cast<shared_ptr<Fact_UUID_Value<string>>>(item).get()->getValue())<< endl;
                 }
-                delete &itemType;
             }
         }
         else if(factValueType == typeid(shared_ptr<Fact_Boolean_Value<bool>>))
@@ -142,7 +141,7 @@ bool Metaline_Testing::testing()
         }
         else if(factValueType == typeid(shared_ptr<Fact_String_Value<string>>))
         {
-            cout << "Fact Value: " << *(any_cast<shared_ptr<Fact_String_Value<string>>>(factValue).get()->getValue())<< endl;
+            cout << "Fact Value : " << *(any_cast<shared_ptr<Fact_String_Value<string>>>(factValue).get()->getValue())<< endl;
         }
         else if(factValueType == typeid(shared_ptr<Fact_Date_Value<Date>>))
         {

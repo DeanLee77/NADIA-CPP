@@ -26,7 +26,7 @@ void Metadata_Line::initialisation(string& parentText, shared_ptr<Tokens> tokens
     
     if(metaType == Meta_Type::FIXED)
     {
-        metaPattern = regex("^(FIXED)(.*)(\\s[AS|IS]\\s*.*)");
+        metaPattern = regex("^(FIXED)(.*)(\\s+(AS|IS)\\s+.*)");
         if(regex_match(parentText, match, metaPattern))
         {
             string variableName = match.str(2);
@@ -64,7 +64,7 @@ void Metadata_Line::setValue(string& valueInString, shared_ptr<Tokens> tokens)
     
     if(metaType == Meta_Type::FIXED)
     {
-        string tempValue = tempVector.at(1);
+        string tempValue = tempVector.size()>2? const_cast<string&>(*tokens->tokensList.at(tokens->tokensList.size() - 1)) :tempVector.at(1);
         
         if(tempStr.compare("IS") == 0)
         {
@@ -99,6 +99,14 @@ void Metadata_Line::setValue(string& valueInString, shared_ptr<Tokens> tokens)
             else if(this->isUUID(lastTokenString))
             {
                 this->value = Fact_Value<string>::parseUUID(tempValue);
+            }
+            else if(this->isQuoted(lastTokenString))
+            {
+                this->value = Fact_Value<string>::parseDefiString(tempValue);
+            }
+            else
+            {
+                this->value = Fact_Value<string>::parse(tempValue);
             }
         }
         else if(tempStr.compare("AS") == 0)
@@ -263,6 +271,7 @@ void Metadata_Line::setMetaType(string& parentText)
         if(regex_search(parentText, match, regex(value)))
         {
             this->metaType = key;
+            break;
         }
     }
 }

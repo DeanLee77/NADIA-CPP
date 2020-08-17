@@ -55,6 +55,8 @@ protected:
     bool isURL(string& str);
     bool isHash(string& str);
     bool isUUID(string& str);
+    bool isQuoted(string& str);
+    
     
 public:
     Node(string& parentText, shared_ptr<Tokens> tokens);

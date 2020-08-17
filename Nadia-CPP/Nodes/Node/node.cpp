@@ -185,3 +185,10 @@ bool Node::isUUID(string& str)
 {
     return str.compare("Id") == 0? true:false;
 }
+
+ bool Node::isQuoted(string& str)
+{
+    regex quoteRegex("^([\"\\“])(.*)([\"\\”])(\\.)*");
+    
+    return regex_search(str, match, quoteRegex);
+}
